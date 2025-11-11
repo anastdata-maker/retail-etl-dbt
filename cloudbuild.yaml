@@ -1,4 +1,16 @@
 steps:
+  # Étape debug : lister fichiers et afficher le Dockerfile
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "=== Listing files in build context ==="
+        ls -l
+        echo "=== Showing Dockerfile content ==="
+        cat Dockerfile
+
+  # Étape build Docker
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -8,16 +20,19 @@ steps:
       - 'gcr.io/$PROJECT_ID/dbt-service:latest'
       - '.'
 
+  # Étape push image avec tag commit SHA
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'gcr.io/$PROJECT_ID/dbt-service:${_COMMIT_SHA}'
 
+  # Étape push image avec tag latest
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'gcr.io/$PROJECT_ID/dbt-service:latest'
 
+  # Étape déploiement Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
