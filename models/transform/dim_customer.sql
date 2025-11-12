@@ -15,3 +15,4 @@ LEFT JOIN {{ source('retail_dsy', 'raw_country') }} cm ON t.country = cm.nicenam
 -- Test CI/CD pipeline
 -- Test CI/CD pipeline
 -- Test CI/CD pipeline
+-- Test CI/CD pipeline
